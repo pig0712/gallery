@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offline Gallery</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- =========================
+       Auth Screens
+  ========================== -->
+  <main id="authWrap" class="authWrap">
+    <section class="authCard">
+      <header class="authHeader">
+        <div class="brand">
+          <div class="brandMark" aria-hidden="true"></div>
+          <div class="brandText">
+            <div class="brandName">Offline Gallery</div>
+            <div class="brandSub">오프라인 · 단일 PC · 다중 사용자</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="authTabs">
+        <button id="tabLogin" class="tab isActive" type="button">로그인</button>
+        <button id="tabSignup" class="tab" type="button">회원가입</button>
+      </div>
+
+      <!-- Login -->
+      <form id="formLogin" class="authForm">
+        <label class="field">
+          <span class="label">아이디</span>
+          <input id="loginId" type="text" autocomplete="username" required minlength="2" maxlength="20" />
+        </label>
+
+        <label class="field">
+          <span class="label">비밀번호</span>
+          <input id="loginPw" type="password" autocomplete="current-password" required minlength="6" maxlength="64" />
+        </label>
+
+        <div class="row">
+          <label class="checkbox">
+            <input id="rememberMe" type="checkbox" />
+            <span>자동 로그인(이 기기)</span>
+          </label>
+        </div>
+
+        <button class="btnPrimary" type="submit">로그인</button>
+      </form>
+
+      <!-- Signup -->
+      <form id="formSignup" class="authForm isHidden">
+        <label class="field">
+          <span class="label">아이디</span>
+          <input id="signupId" type="text" autocomplete="username" required minlength="2" maxlength="20" />
+          <span class="help">공백 없이 2~20자</span>
+        </label>
+
+        <label class="field">
+          <span class="label">비밀번호</span>
+          <input id="signupPw" type="password" autocomplete="new-password" required minlength="6" maxlength="64" />
+        </label>
+
+        <label class="field">
+          <span class="label">비밀번호 확인</span>
+          <input id="signupPw2" type="password" autocomplete="new-password" required minlength="6" maxlength="64" />
+        </label>
+
+        <button class="btnPrimary" type="submit">회원가입</button>
+      </form>
+
+      <footer class="authFooter">
+        <div class="muted small">
+          데이터는 이 PC의 브라우저(localStorage)에만 저장됩니다.
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <!-- =========================
+       App Shell
+  ========================== -->
+  <div id="appWrap" class="appWrap isHidden">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topLeft">
+        <div class="brandMini">
+          <div class="brandMark" aria-hidden="true"></div>
+          <div>
+            <div class="brandName">Offline Gallery</div>
+            <div id="topSubtitle" class="brandSub">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topRight">
+        <div class="chipRow">
+          <div id="chipRole" class="chip isHidden">ADMIN</div>
+          <div id="chipUser" class="chip">—</div>
+        </div>
+
+        <div class="userMenuWrap">
+          <button id="btnUserMenu" class="iconBtn" type="button"
+            aria-haspopup="true" aria-expanded="false" aria-controls="userMenuPanel" title="사용자 메뉴">
+            <span aria-hidden="true">☰</span>
+          </button>
+
+          <!-- Backdrop for user menu -->
+          <div id="menuBackdrop" class="backdrop isHidden" aria-hidden="true"></div>
+
+          <div id="userMenuPanel" class="menuPanel isHidden" role="menu" aria-label="사용자 메뉴">
+            <div class="menuHeader">
+              <div class="menuTitle">사용자 메뉴</div>
+              <div id="menuUserMeta" class="menuSub muted small">—</div>
+            </div>
+
+            <div class="menuSep" aria-hidden="true"></div>
+
+            <!-- Theme selection -->
+            <div class="menuLabel">테마</div>
+            <div class="segmented" role="radiogroup" aria-label="테마 선택">
+              <button id="btnThemeDark" class="segBtn" type="button" role="radio" aria-checked="true">다크</button>
+              <button id="btnThemeLight" class="segBtn" type="button" role="radio" aria-checked="false">라이트</button>
+            </div>
+
+            <div class="menuSep" aria-hidden="true"></div>
+
+            <!-- Accent color (RGB) -->
+            <div class="menuLabel">포인트 색상 (RGB)</div>
+
+            <div class="accentBox">
+              <div class="accentPreviewRow">
+                <div id="accentPreview" class="accentPreview" title="미리보기"></div>
+                <div class="accentPreviewText">
+                  <div class="muted small">현재 포인트 색상</div>
+                  <div id="accentHexText" class="mono">#———</div>
+                </div>
+              </div>
+
+              <div class="rgbRow">
+                <div class="rgbLabel">R</div>
+                <input id="rgbR" type="range" min="0" max="255" value="110" />
+                <input id="rgbRNum" type="number" min="0" max="255" value="110" />
+              </div>
+              <div class="rgbRow">
+                <div class="rgbLabel">G</div>
+                <input id="rgbG" type="range" min="0" max="255" value="231" />
+                <input id="rgbGNum" type="number" min="0" max="255" value="231" />
+              </div>
+              <div class="rgbRow">
+                <div class="rgbLabel">B</div>
+                <input id="rgbB" type="range" min="0" max="255" value="255" />
+                <input id="rgbBNum" type="number" min="0" max="255" value="255" />
+              </div>
+
+              <div class="row">
+                <button id="btnAccentApply" class="btnGhost" type="button">적용</button>
+                <button id="btnAccentReset" class="btnGhost" type="button">기본값</button>
+              </div>
+
+              <div class="help small muted">
+                슬라이더는 즉시 미리보기, “적용”을 눌러 저장합니다.
+              </div>
+            </div>
+
+            <div class="menuSep" aria-hidden="true"></div>
+
+            <button id="btnExport" class="menuItem" type="button" role="menuitem">
+              <span>전체 내보내기(JSON)</span>
+              <span class="muted">↗</span>
+            </button>
+            <button id="btnImport" class="menuItem" type="button" role="menuitem">
+              <span>가져오기(JSON)</span>
+              <span class="muted">↘</span>
+            </button>
+
+            <div class="menuSep" aria-hidden="true"></div>
+
+            <button id="btnLogout" class="menuItem danger" type="button" role="menuitem">
+              <span>로그아웃</span>
+              <span aria-hidden="true">⎋</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sideTop">
+          <div class="sideActions">
+            <button id="btnNewGallery" class="btnPrimary" type="button">+ 새 갤러리</button>
+            <button id="btnNewPost" class="btnGhost" type="button">+ 새 게시물</button>
+          </div>
+
+          <label class="field compact">
+            <span class="label">검색</span>
+            <input id="searchInput" type="text" placeholder="갤러리/게시물/소유자 검색" />
+          </label>
+
+          <div class="sideQuick">
+            <button id="btnAllGalleries" class="pill isActive" type="button">전체</button>
+            <button id="btnTrash" class="pill" type="button">휴지통</button>
+          </div>
+
+          <div class="sideQuick">
+            <button id="btnViewGrid" class="pill isActive" type="button">그리드</button>
+            <button id="btnViewList" class="pill" type="button">리스트</button>
+          </div>
+        </div>
+
+        <div class="sideListHeader">
+          <div class="muted small">갤러리 (모든 사용자)</div>
+          <div id="sideOwnerHint" class="muted small">작성/수정 권한은 소유자 기준</div>
+        </div>
+
+        <div id="galleryList" class="galleryList" aria-label="갤러리 목록"></div>
+      </aside>
+
+      <!-- Content -->
+      <section class="content">
+        <div id="contextBar" class="contextBar">
+          <div class="contextLeft">
+            <div id="contextTitle" class="contextTitle">전체 갤러리</div>
+            <div id="contextMeta" class="contextMeta muted">—</div>
+          </div>
+          <div class="contextRight">
+            <button id="btnEditGallery" class="btnGhost" type="button">갤러리 편집</button>
+            <button id="btnDeleteGallery" class="btnGhost danger" type="button">갤러리 삭제</button>
+          </div>
+        </div>
+
+        <div id="contentBody" class="contentBody"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- =========================
+       Modal System
+  ========================== -->
+  <div id="modalBackdrop" class="backdrop isHidden" aria-hidden="true"></div>
+
+  <div id="modal" class="modal isHidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modalHeader">
+      <div id="modalTitle" class="modalTitle">—</div>
+      <button id="btnModalClose" class="iconBtn" type="button" title="닫기" aria-label="닫기">✕</button>
+    </div>
+    <div id="modalBody" class="modalBody"></div>
+    <div id="modalFooter" class="modalFooter"></div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastHost" class="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
